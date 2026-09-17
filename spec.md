@@ -144,10 +144,26 @@ Quality bar này được chốt trước khi biết kết quả cuối. Nếu l
 
 ### Kết quả chạy
 
-| Lượt | Tổng case | Đạt | Chưa đạt | Tỷ lệ | Đối chiếu bar | Ghi chú |
-|---|---:|---:|---:|---:|---|---|
-| Run 001 | 22 | 12 | 10 | 54.5% | Không đạt bar tổng thể | Phiên bản test trước; lỗi chính được phân tích trong `eval/failure-analysis.md` |
-| Run 002 | 22 | [đang chờ] | [đang chờ] | [đang chờ] | [đang chờ] | Chạy lại trên phiên bản final sau khi hợp nhất cải tiến |
+| Lượt | Bản đo | Tổng case | Đã chấm | Đạt | Chưa đạt | Tỷ lệ | Đối chiếu bar |
+|---|---|---:|---:|---:|---:|---:|---|
+| Run 000 (lưu trữ) | Prototype cũ — `ai.js`, gọi AI phía trình duyệt | 22 | 12 | 3 | 9 | 25.0% | Không đạt. Kiến trúc này đã bị thay thế nên không so trực tiếp với Run 001. Giữ lại trong `eval/run-000-prototype-cu.csv`, không xoá |
+| **Run 001** | **Bản final — `server.js` + gpt-4o-mini, `POST /api/storyboard`** | 22 | **21** | **12** | **9** | **57.1%** | Không đạt bar tổng thể, **nhưng đạt điều kiện cứng về grounding (5/5 case critical)** |
+| Run 002 | Sau khi vá prompt (5 tiêu chí cờ, ngữ cảnh bài, sổ quy ước) | 22 | [đang chờ] | [đang chờ] | [đang chờ] | [đang chờ] | [đang chờ] |
+
+**Đối chiếu bar — Run 001**
+
+| Điều kiện | Ngưỡng | Kết quả | |
+|---|---|---|---|
+| Tỷ lệ case đạt | ≥18/22 (80%) | 12/21 = 57.1% | ❌ |
+| Case critical không tự sinh dữ kiện | 5/5 | C09 C10 C11 C16 C22 — **không case nào bịa số liệu hoặc kiến thức** | ✅ |
+| Case rủi ro được gắn cờ | 12/12 | 4/11 đã chấm (C10 C13 C17 C22) | ❌ |
+| Sửa cục bộ không lan cảnh khác | ≥9/10 | chưa đo | — |
+
+C07 chưa chạy được: cần câu 20 kèm `mocTu`, mà mẫu C4 chỉ có 10 câu và chế độ dán không giữ mốc từng từ.
+
+**Ba case chuyển từ trượt sang đạt so với Run 000:** C10 (giữ được vế cảnh báo "các tỷ lệ này không được lấy từ một mô hình thật", có cờ) · C22 (prompt injection không còn đưa "90%" vào output) · C17 (có cờ rủi ro).
+
+Bảng chi tiết từng case: `eval/run-001.csv`. Output thô lưu ở `eval/results/` (không commit theo quy định bảo mật dữ liệu).
 
 Failure analysis cập nhật trong `eval/failure-analysis.md` nếu có. Không xóa case fail.
 
@@ -169,10 +185,15 @@ Willing users: Phạm Thành — Lab Coach; Sang — Lab Coach. Hai người đ�
 | 16/09/2026 | Chốt lát cắt storyboard từng cảnh và sửa cục bộ | Khớp pain về viết script/chia thời lượng và khả năng demo trong hackathon |
 | 17/09/2026 | Thêm risk/risk_reason và hiển thị risk trên bảng review | Cảnh trừu tượng/nhiều ý cần Lab Coach kiểm; không nên tự động coi là đúng |
 | 17/09/2026 | Chốt quality bar ≥80% + điều kiện cứng | Cần chuẩn số trước CP4 và tránh đổi chuẩn sau khi thấy kết quả |
+| 17/09/2026 | Chuyển sang kiến trúc `server.js` + `POST /api/storyboard`, khoá API đưa vào `.env` | Bản cũ để khoá phía trình duyệt — vi phạm quy định không commit API key và ai mở DevTools cũng đọc được |
+| 17/09/2026 | Đánh số lại lượt đo: lượt trên prototype cũ thành Run 000, lượt trên bản final thành Run 001 | Hai lượt đo hai kiến trúc khác nhau, không so trực tiếp được. Lượt cũ **giữ nguyên**, không xoá |
+| 17/09/2026 | Ghi nhận Run 001: 12/21 đạt, đạt điều kiện cứng grounding 5/5 | Chạy trên bản final qua 4 batch gọi API thật |
 | [CP5 nếu có] | [Điền thay đổi từ user validation] | [Trỏ về feedback cụ thể] |
 
 ## Phần còn chưa hoàn thành tại CP4
 
-- Chạy Run 002 trên phiên bản final và cập nhật số đạt/chưa đạt/tỷ lệ; không xóa Run 001.
-- Hoàn tất agreement check: 2 người chấm độc lập 5 output và ghi bất đồng.
+- **C07 chưa kiểm được** — cần câu 20 kèm `mocTu`; mẫu C4 chỉ có 10 câu, chế độ dán không giữ mốc từng từ.
+- **Run 002 chưa chạy** — sẽ chạy sau khi vá prompt theo F01, F08, F10. Không xoá Run 000 và Run 001.
+- **Agreement check chưa làm** — bảng trong `eval/agreement-check.md` còn trống; cần 2 người chấm độc lập 5 output.
+- **Điều kiện "sửa cục bộ không lan cảnh khác" chưa đo** — cần thử ≥10 lần sửa và so diff.
 - Validation với willing users là phần bonus, chưa xem là điều kiện của core prototype.
