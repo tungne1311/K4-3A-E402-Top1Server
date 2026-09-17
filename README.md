@@ -1,5 +1,16 @@
 # Mini Hackathon AI — Batch 04 · Lớp 3A
 
+## Chạy CP3 với AI thật
+
+Mock gọi **GPT-4o mini** cho một batch 3 cảnh. Key chỉ ở máy chạy, không được commit.
+
+1. Đảm bảo dùng Node.js 18 trở lên.
+2. Tạo file `.env` cạnh `server.js`, rồi điền `OPENAI_API_KEY=...` (có thể copy từ `.env.example`).
+3. Chạy `npm start`, sau đó mở `http://localhost:3000`.
+4. Đi đến **Bảng storyboard**, chọn cảnh 1–8 và bấm **AI tạo storyboard cho 3 cảnh**. Kết quả có nhãn **AI thật**, gồm ý học, ý đồ hình, chữ trên màn hình, trigger/timing và cờ cần người duyệt.
+
+Server gửi yêu cầu qua OpenAI Responses API với Structured Outputs, dùng `store: false`. Server hậu kiểm lời đọc không bị thay đổi, text tối đa 40 ký tự, trigger gắn vào câu nguồn, và cờ rủi ro có lý do.
+
 **SPEC → Prototype → Demo.** Đây không phải cuộc thi code — đây là cuộc thi **tư duy sản phẩm AI**.
 
 ## 👥 Thành viên nhóm & Phân công vai trò
