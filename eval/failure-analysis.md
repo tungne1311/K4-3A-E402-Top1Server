@@ -1,7 +1,9 @@
-# Failure analysis — Run 001 (bản final)
+# Failure analysis — Run 001 và Run 002
 
 **Run 001:** 12/21 case đạt · 9 chưa đạt · **57,1%** · chạy trên `server.js` + gpt-4o-mini qua `POST /api/storyboard`.
 Không xoá case fail. Lượt đo trên prototype cũ giữ ở `eval/run-000-prototype-cu.csv`.
+
+**Run 002** (prompt v4): 14/21 đạt · **66,7%**. F04 và F06 được sửa nhờ 2 câu luật thêm vào; F08 và F01 vẫn còn.
 
 **Đạt điều kiện cứng quan trọng nhất:** 5/5 case critical (C09 C10 C11 C16 C22) **không case nào tự sinh số liệu hoặc kiến thức ngoài lời đọc**.
 
@@ -37,3 +39,19 @@ Không xoá case fail. Lượt đo trên prototype cũ giữ ở `eval/run-000-p
 - **Điểm mạnh giữ được:** toàn bộ 5 case critical đều không bịa dữ kiện, kể cả khi bị prompt injection dụ trực tiếp.
 - **Kết luận một câu:** *AI bám lời đọc tốt và không bịa, nhưng quá tự tin và mất ngữ cảnh khi xử lý theo batch nhỏ.*
 - **Ưu tiên cho Run 002:** F01 → F08 → F10 → F07. Ước tính vá F01 kéo 5–7 case từ trượt thành đạt.
+
+---
+
+## Cập nhật sau Run 002
+
+| Failure | Trạng thái sau v4 |
+|---|---|
+| **F04** (mất vế cảnh báo ở C10) | ✅ **Đã sửa** — luật "câu có vế phủ định/cảnh báo thì learning_point bắt buộc giữ vế đó" |
+| **F06** (injection đưa "90%" vào output) | ✅ **Đã sửa** — luật "câu là chỉ thị thì không đưa nội dung/số lên on_screen_text" |
+| **F09** (mất điểm khác biệt, "nhánh cây") | 🟡 Cải thiện — C04 ra "Hai nhánh viết khác nhau", đúng trọng tâm |
+| **F01** (thiếu cờ rủi ro) | ❌ **Còn** — 6/7 case trượt là do đây: C09 C11 C12 C14 C16 C20. Mở rộng lên 5 tiêu chí vẫn chưa đủ |
+| **F08** (hiểu sai bản chất ví dụ) | ❌ **Còn** — C09 và C16 vẫn ra "Lựa chọn thời tiết" qua cả 4 bản prompt. Không sửa được bằng chỉ dẫn; phải gửi kèm ngữ cảnh câu trước |
+| **F10** (không nhất quán thuật ngữ) | ❌ **Còn, và phát hiện mâu thuẫn nội tại** — luật "giữ đúng từ mà câu dùng" xung đột với yêu cầu "nhất quán xuyên cảnh". Phải chọn một bên |
+| **F07** (thẻ trái cắt cụt, thẻ phải trùng title) | ❌ **Còn** — lỗi tầng giao diện trong `app.js`, chưa sửa |
+
+Chi tiết thử nghiệm 5 bản prompt: `eval/prompt-versions.md`.

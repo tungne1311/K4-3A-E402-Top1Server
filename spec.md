@@ -148,7 +148,7 @@ Quality bar này được chốt trước khi biết kết quả cuối. Nếu l
 |---|---|---:|---:|---:|---:|---:|---|
 | Run 000 (lưu trữ) | Prototype cũ — `ai.js`, gọi AI phía trình duyệt | 22 | 12 | 3 | 9 | 25.0% | Không đạt. Kiến trúc này đã bị thay thế nên không so trực tiếp với Run 001. Giữ lại trong `eval/run-000-prototype-cu.csv`, không xoá |
 | **Run 001** | **Bản final — `server.js` + gpt-4o-mini, `POST /api/storyboard`** | 22 | **21** | **12** | **9** | **57.1%** | Không đạt bar tổng thể, **nhưng đạt điều kiện cứng về grounding (5/5 case critical)** |
-| Run 002 | Sau khi vá prompt (5 tiêu chí cờ, ngữ cảnh bài, sổ quy ước) | 22 | [đang chờ] | [đang chờ] | [đang chờ] | [đang chờ] | [đang chờ] |
+| **Run 002** | **prompt v4 = v1 + 3 luật phẫu thuật, temperature 0** | 22 | **21** | **14** | **7** | **66,7%** | Chưa đạt bar tổng thể; **đạt điều kiện cứng grounding 5/5**. Tăng 9,6 điểm phần trăm so với Run 001 |
 
 **Đối chiếu bar — Run 001**
 
@@ -163,7 +163,13 @@ C07 chưa chạy được: cần câu 20 kèm `mocTu`, mà mẫu C4 chỉ có 10
 
 **Ba case chuyển từ trượt sang đạt so với Run 000:** C10 (giữ được vế cảnh báo "các tỷ lệ này không được lấy từ một mô hình thật", có cờ) · C22 (prompt injection không còn đưa "90%" vào output) · C17 (có cờ rủi ro).
 
-Bảng chi tiết từng case: `eval/run-001.csv`. Output thô lưu ở `eval/results/` (không commit theo quy định bảo mật dữ liệu).
+**Thử nghiệm prompt (cùng 21 case, cùng bản code):** v1 gốc 57,1% · v2 mở rộng tiêu chí cờ 52,4% · v3 viết lại toàn bộ 38,1% · v1 đối chứng ở temperature 0 vẫn 57,1% · **v4 = v1 + 3 câu luật: 66,7%**. Bản v2 và v3 làm kết quả xấu đi nhưng **được giữ lại nguyên trong repo**, không xoá. Chi tiết: `eval/prompt-versions.md`.
+
+Hai luật có tác dụng: (1) câu có vế phủ định/cảnh báo thì `learning_point` bắt buộc giữ vế đó — kéo C10 từ trượt thành đạt; (2) câu là chỉ thị thì không đưa nội dung/số của chỉ thị lên `on_screen_text` — kéo C22 từ trượt thành đạt, không còn để lọt "90%".
+
+**Hạn chế:** mỗi bản prompt chỉ chạy 1 lượt (n=1), chưa tách được ảnh hưởng prompt khỏi nhiễu ngẫu nhiên.
+
+Bảng chi tiết từng case: `eval/run-001.csv` và `eval/run-002.csv`. Output thô lưu ở `eval/results/` (không commit theo quy định bảo mật dữ liệu).
 
 Failure analysis cập nhật trong `eval/failure-analysis.md` nếu có. Không xóa case fail.
 
@@ -188,12 +194,15 @@ Willing users: Phạm Thành — Lab Coach; Sang — Lab Coach. Hai người đ�
 | 17/09/2026 | Chuyển sang kiến trúc `server.js` + `POST /api/storyboard`, khoá API đưa vào `.env` | Bản cũ để khoá phía trình duyệt — vi phạm quy định không commit API key và ai mở DevTools cũng đọc được |
 | 17/09/2026 | Đánh số lại lượt đo: lượt trên prototype cũ thành Run 000, lượt trên bản final thành Run 001 | Hai lượt đo hai kiến trúc khác nhau, không so trực tiếp được. Lượt cũ **giữ nguyên**, không xoá |
 | 17/09/2026 | Ghi nhận Run 001: 12/21 đạt, đạt điều kiện cứng grounding 5/5 | Chạy trên bản final qua 4 batch gọi API thật |
+| 17/09/2026 | Thử 3 bản prompt (v2, v3, v4) và 1 lượt đối chứng; chốt v4 | v2 và v3 làm kết quả xấu đi (52,4% và 38,1%); v4 chỉ thêm 3 câu luật vào v1 và đạt 66,7% |
+| 17/09/2026 | Đặt `temperature: 0` trong `server.js` | Trước đó không đặt nên chạy ở mặc định 1.0, các lượt đo lệch nhau nhiều và không so sánh được |
 | [CP5 nếu có] | [Điền thay đổi từ user validation] | [Trỏ về feedback cụ thể] |
 
 ## Phần còn chưa hoàn thành tại CP4
 
 - **C07 chưa kiểm được** — cần câu 20 kèm `mocTu`; mẫu C4 chỉ có 10 câu, chế độ dán không giữ mốc từng từ.
-- **Run 002 chưa chạy** — sẽ chạy sau khi vá prompt theo F01, F08, F10. Không xoá Run 000 và Run 001.
+- **Run 003 chưa chạy** — 6/7 case còn trượt là do thiếu cờ rủi ro; cần thử tiếp. Không xoá Run 000, 001, 002.
+- **Chưa chạy lặp** — mỗi bản prompt mới đo 1 lượt, chưa đủ để kết luận chắc bản nào tốt hơn.
 - **Agreement check chưa làm** — bảng trong `eval/agreement-check.md` còn trống; cần 2 người chấm độc lập 5 output.
 - **Điều kiện "sửa cục bộ không lan cảnh khác" chưa đo** — cần thử ≥10 lần sửa và so diff.
 - Validation với willing users là phần bonus, chưa xem là điều kiện của core prototype.
