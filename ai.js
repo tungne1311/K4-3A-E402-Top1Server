@@ -1,8 +1,19 @@
 'use strict';
 // ── OpenAI integration for StoryboardAI ──────────────────────────
-// Replace YOUR_API_KEY with your actual OpenAI key.
-const OPENAI_API_KEY = 'YOUR_API_KEY';
-const OPENAI_MODEL  = 'gpt-4o-mini';
+// API key is stored in localStorage, entered by user via prompt.
+function getApiKey() {
+  let key = localStorage.getItem('openai_api_key');
+  if (!key) {
+    key = prompt('Nhập OpenAI API Key (dạng sk-...).\nKey chỉ lưu trên trình duyệt này, không gửi đi đâu ngoài OpenAI.');
+    if (key && key.startsWith('sk-')) {
+      localStorage.setItem('openai_api_key', key);
+    } else {
+      throw new Error('API key không hợp lệ. Cần bắt đầu bằng sk-');
+    }
+  }
+  return key;
+}
+const OPENAI_MODEL = 'gpt-4o-mini';
 
 /**
  * Call OpenAI Chat Completions API.
@@ -15,7 +26,7 @@ async function callOpenAI(systemPrompt, userPrompt) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${OPENAI_API_KEY}`
+      'Authorization': `Bearer ${getApiKey()}`
     },
     body: JSON.stringify({
       model: OPENAI_MODEL,
@@ -23,7 +34,7 @@ async function callOpenAI(systemPrompt, userPrompt) {
       max_tokens: 4000,
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user',   content: userPrompt }
+        { role: 'user', content: userPrompt }
       ]
     })
   });
@@ -70,36 +81,36 @@ MỤC TIÊU: ${meta.goal}
 THỜI LƯỢNG MỤC TIÊU: ${meta.duration} phút
 
 DANH SÁCH ${sentences.length} CÂU LỜI ĐỌC:
-${sentences.map(s => `[Câu ${s.n}] (${s.soFrame} frames / ${(s.soFrame/30).toFixed(1)}s): ${s.loi}`).join('\n')}
+${sentences.map(s => `[Câu ${s.n}] (${s.soFrame} frames / ${(s.soFrame / 30).toFixed(1)}s): ${s.loi}`).join('\n')}
 
 Hãy tạo kế hoạch hình cho ${sentences.length} câu trên. Trả về JSON array.`;
 
   const raw = await callOpenAI(systemPrompt, userPrompt);
-  
+
   // Extract JSON from response (handle markdown code blocks)
   let jsonStr = raw.trim();
   if (jsonStr.startsWith('```')) {
     jsonStr = jsonStr.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
   }
-  
+
   const plans = JSON.parse(jsonStr);
-  
+
   // Merge AI plans with source sentence data
   return sentences.map((s, i) => {
     const plan = plans[i] || {};
     return {
       ...JSON.parse(JSON.stringify(s)),
-      title:       (plan.title || 'Cảnh ' + s.n).slice(0, 40),
-      intent:      plan.intent || '',
-      left:        (plan.left || '').slice(0, 45),
-      right:       (plan.right || '').slice(0, 45),
-      layout:      plan.layout || '',
-      style:       plan.style === 'cards' ? 'cards' : 'flow',
-      cue:         s.mocTu?.[Math.floor((s.mocTu?.length || 0) / 2)]?.[1] ?? Math.floor(s.soFrame / 2),
+      title: (plan.title || 'Cảnh ' + s.n).slice(0, 40),
+      intent: plan.intent || '',
+      left: (plan.left || '').slice(0, 45),
+      right: (plan.right || '').slice(0, 45),
+      layout: plan.layout || '',
+      style: plan.style === 'cards' ? 'cards' : 'flow',
+      cue: s.mocTu?.[Math.floor((s.mocTu?.length || 0) / 2)]?.[1] ?? Math.floor(s.soFrame / 2),
       interaction: plan.interaction || '',
-      approved:    false,
-      revision:    0,
-      history:     []
+      approved: false,
+      revision: 0,
+      history: []
     };
   });
 }
