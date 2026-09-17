@@ -38,17 +38,18 @@ Khung chọn chiều: PAIR 2.3 (Coverage · Relevance · Diversity · Sensitivit
 
 *Kiểm được bằng máy:* đếm ký tự, so toạ độ, so `frame` với `mocTu`.
 
-## Quality bar — bản đề xuất (chưa chốt)
+## Quality bar — chốt tại CP4
 
-> **Đạt khi ≥70% case trong golden set đạt cả 3 chiều ở mức ≥4/5**, VÀ thoả 3 điều kiện cứng:
+> **Đạt khi ≥80% case trong golden set đạt toàn bộ tiêu chí của case (tương đương ≥18/22 ở bộ hiện tại)**, VÀ thoả 4 điều kiện cứng:
 > 1. **0 case lớp ①** có phần tử hình không truy nguồn được — 1 case vi phạm là **trượt cả bộ**
 > 2. **100%** cảnh lệch sổ quy ước đều nằm trong `tuKhai[]`
 > 3. Sửa 1 cảnh → **diff các cảnh khác = 0**
+> 4. **100%** case rủi ro bắt buộc được flag hoặc giữ ở trạng thái chưa duyệt
 
 **Cần làm trước khi chốt:**
-- [ ] Chạy thô 10–20 câu, phân loại *dùng được / sửa được / không chấp nhận được* (guide §2.6 bước 1) — biết 70% có với tới được không
-- [ ] **Agreement check:** 2 thành viên chấm độc lập 5 output; lệch ≥20% là định nghĩa chưa đủ rõ, phải sửa thang trước khi khoá bar
-- [ ] Product Lead duyệt: bar này có đo đúng giá trị Lab Coach cần không
+- [x] Chạy thô trên bộ fixture và xây golden set 22 case; giữ cả case thường, case khó và edge case.
+- [ ] **Agreement check:** 2 thành viên chấm độc lập 5 output; lệch ≥20% là định nghĩa chưa đủ rõ, phải sửa thang trước khi khoá bar.
+- [x] Product Lead duyệt: bar đo đúng ba pain chính của Lab Coach: bám lời đọc, nhất quán và khả thi dựng.
 
 > Sau **21:00 17/9 (CP4)** không đổi bar được nữa. Số thấp vẫn đủ điểm nếu trung thực — hạ bar sau khi thấy kết quả thì mất điểm.
 

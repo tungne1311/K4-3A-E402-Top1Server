@@ -8,10 +8,10 @@
 
 | Họ và Tên | Mã Học Viên | Vai trò chính | Phần việc đảm nhiệm trong dự án |
 |---|---|---|---|
-| Đỗ Thanh Tùng |2A202602845 |Prompt/Eval Lead |  |
-| Ninh Quang Minh |2A202602432  |Product/Evidence Lead  |  |
-| Phạm Đức Anh  |2A202602994  |Prototype Lead |  |
-| Trần Võ Hoàng Nguyên |2A202602551  |Demo/Spec Lead  |  |
+| Đỗ Thanh Tùng |2A202602845 |Prompt/Eval Lead | Thiết kế prompt và schema output; xây golden set; chạy eval; ghi pass/fail và failure analysis. |
+| Ninh Quang Minh |2A202602432  |Product/Evidence Lead  | Chốt user/job/pain; tổng hợp phỏng vấn Lab Coach; impact; duyệt scope, quality bar và spec. |
+| Phạm Đức Anh  |2A202602994  |Prototype Lead | Tích hợp AI call; duy trì flow end-to-end; review/sửa cục bộ; log trace và kiểm tra prototype. |
+| Trần Võ Hoàng Nguyên |2A202602551  |Demo/Spec Lead  | Tổng hợp spec; chuẩn bị demo/video/slide; kiểm tra cấu trúc repo và các form checkpoint. |
 
 > Nhóm copy nguyên file README này về repo của mình, rồi điền bảng trên. Cột **Phần việc đảm nhiệm** ghi càng cụ thể càng tốt.
 

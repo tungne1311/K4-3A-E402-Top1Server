@@ -7,11 +7,11 @@
 |---|---|---|
 | `schema.md` | Input/output schema của agent | Nháp CP2 |
 | `failure-scenarios.md` | 4 lớp chỗ khó + 8 kịch bản rủi ro | Nháp CP2 |
-| `quality-dimensions.md` | 3 chiều chất lượng + thang 1/3/5 + quality bar | Nháp CP2 — **chốt trước 21:00 17/9** |
-| `golden-set.md` | ≥20 case | Chưa làm — hạn CP3 |
-| `agreement-check.md` | 2 người chấm độc lập 5 output | Chưa làm — hạn CP4 |
-| `run-01.md` … | Bảng kết quả từng lượt chạy | Chưa làm — từ CP3 |
-| `failure-analysis.md` | trigger → biểu hiện → hậu quả → sửa gì | Chưa làm — từ CP3 |
+| `quality-dimensions.md` | 3 chiều chất lượng + quality bar | **Đã chốt CP4: ≥80% (≥18/22) + điều kiện cứng** |
+| `golden-set.csv` | 22 case | **Đã có — CP3** |
+| `agreement-check.md` | 2 người chấm độc lập 5 output | Có template — cần điền kết quả trước CP4 |
+| `run-001.csv` | Bảng kết quả lượt chạy 001 | Đã có khung — cần điền pass/fail thực tế |
+| `failure-analysis.md` | trigger → biểu hiện → hậu quả → sửa gì | Có template — điền từ run-001 |
 
 ## Nguồn dữ liệu
 
