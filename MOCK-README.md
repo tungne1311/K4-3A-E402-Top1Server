@@ -1,4 +1,15 @@
-﻿# StoryboardAI · CP2 interactive mock
+> ⚠️ **TÀI LIỆU CŨ — giai đoạn CP2.** Bản mock chạy hoàn toàn trong trình duyệt đã bị thay thế.
+> Từ 17/9, ứng dụng cần **Node 18+** và chạy qua server để giữ khoá API ngoài trình duyệt:
+>
+> ```bash
+> cp .env.example .env   # rồi điền OPENAI_API_KEY
+> npm start              # http://localhost:3000
+> ```
+>
+> Mở thẳng `index.html` **sẽ không gọi được AI** vì nút "Tạo bằng AI" gửi yêu cầu tới `POST /api/storyboard`.
+> Giữ file này làm hồ sơ giai đoạn CP2.
+
+# StoryboardAI · CP2 interactive mock
 
 ## Mở ứng dụng
 
