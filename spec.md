@@ -4,7 +4,7 @@ Hướng: [ ] A — VLearn  [ ] B — Trợ lý Học viên  [x] C — Lesson St
 Đề: C4 — StoryboardAI
 Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới
 
-> Trạng thái CP4: bản spec được chốt theo prototype và artifact hiện có. Các ô `[CP3-PENDING]` phải được thay bằng số liệu thật từ `eval/run-001.csv` trước khi nộp CP4; không đổi quality bar sau thời điểm chốt.
+> Trạng thái CP4: bản spec được chốt theo prototype và artifact hiện có. Run 001 là lượt chạy trên phiên bản test trước; nhóm còn chạy Run 002 trên phiên bản final sau khi hợp nhất các cải tiến. Không đổi quality bar sau thời điểm chốt.
 
 ## §1. User & Job
 
@@ -146,7 +146,8 @@ Quality bar này được chốt trước khi biết kết quả cuối. Nếu l
 
 | Lượt | Tổng case | Đạt | Chưa đạt | Tỷ lệ | Đối chiếu bar | Ghi chú |
 |---|---:|---:|---:|---:|---|---|
-| Run 001 | 22 | [CP3-PENDING] | [CP3-PENDING] | [CP3-PENDING] | [CP3-PENDING] | Điền từ `eval/run-001.csv` sau khi team chấm xong |
+| Run 001 | 22 | 12 | 10 | 54.5% | Không đạt bar tổng thể | Phiên bản test trước; lỗi chính được phân tích trong `eval/failure-analysis.md` |
+| Run 002 | 22 | [đang chờ] | [đang chờ] | [đang chờ] | [đang chờ] | Chạy lại trên phiên bản final sau khi hợp nhất cải tiến |
 
 Failure analysis cập nhật trong `eval/failure-analysis.md` nếu có. Không xóa case fail.
 
@@ -172,7 +173,6 @@ Willing users: Phạm Thành — Lab Coach; Sang — Lab Coach. Hai người đ�
 
 ## Phần còn chưa hoàn thành tại CP4
 
-- Điền số đạt/chưa đạt/tỷ lệ của `eval/run-001.csv` sau khi hoàn tất chấm.
-- Bổ sung `eval/failure-analysis.md` với trigger, biểu hiện, hậu quả và sửa gì.
+- Chạy Run 002 trên phiên bản final và cập nhật số đạt/chưa đạt/tỷ lệ; không xóa Run 001.
 - Hoàn tất agreement check: 2 người chấm độc lập 5 output và ghi bất đồng.
 - Validation với willing users là phần bonus, chưa xem là điều kiện của core prototype.
