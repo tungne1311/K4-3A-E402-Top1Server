@@ -1,0 +1,10 @@
+DA/
+.env
+.env.*
+.git/
+eval/
+evidence/
+codebase/
+*.md
+node_modules/
+dist/

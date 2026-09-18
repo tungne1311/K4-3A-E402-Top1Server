@@ -2,3 +2,6 @@
 .env
 node_modules/
 eval/results/
+.DS_Store
+__pycache__/
+dist/
