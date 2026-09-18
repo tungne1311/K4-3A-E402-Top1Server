@@ -17,6 +17,7 @@ const authored = [
  ['Kết hợp thông tin','Các bước tính toán kết hợp thông tin được phép dùng.','Phần được phép dùng','Kết hợp thông tin','Mũi tên biểu diễn luồng thông tin, không thêm kiến trúc.']
 ];
 let state = fresh(), draft = null, busy = false, toastTimer;
+window.storyboardBridge = { getState: () => state, getDraft: () => draft };
 function fresh(){return {step:0,unlocked:0,mode:'sample',text:'',source:[],scenes:[],selected:0,filter:'all',analyzed:false,meta:{title:C4_SAMPLE.tieuDe,goal:C4_SAMPLE.mucTieu,audience:'Học viên mới làm quen với AI',duration:5}}}
 function toast(text){$('toast').textContent=text;$('toast').classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.add('hidden'),3200)}
 function btn(id,text,kind='primary',disabled=false){return `<button id="${id}" class="btn ${kind}" ${disabled?'disabled':''}>${text}</button>`}

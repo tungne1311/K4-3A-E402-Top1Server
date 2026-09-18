@@ -15,6 +15,9 @@ const sceneSchema = { type: 'object', additionalProperties: false, properties: {
 const batchSchema = { type: 'object', additionalProperties: false, properties: {
   scenes: { type: 'array', minItems: 3, maxItems: 5, items: sceneSchema }
 }, required: ['scenes'] };
+const metadataSchema = { type: 'object', additionalProperties: false, properties: {
+  title: { type: 'string' }, goal: { type: 'string' }, audience: { type: 'string' }, duration: { type: 'integer', minimum: 1, maximum: 60 }
+}, required: ['title', 'goal', 'audience', 'duration'] };
 
 const systemPrompt = `Bạn là trợ lý storyboard cho Lab Coach.
 Bạn nhận 3–5 câu lời đọc đã chốt và tạo đúng một cảnh cho mỗi câu.
@@ -80,6 +83,15 @@ async function generateStoryboard(scenes) {
   if (checked.errors) { const error = new Error(checked.errors.join(' ')); error.status = 422; throw error; }
   return checked.result;
 }
+async function generateLessonMetadata(text) {
+  if (!process.env.OPENAI_API_KEY) { const error = new Error('Chưa thấy OPENAI_API_KEY.'); error.status = 503; throw error; }
+  const prompt = `Bạn là product designer cho Studio bài giảng. Từ transcript, đề xuất metadata lesson bằng tiếng Việt. title ngắn và cụ thể; goal bắt đầu bằng động từ và chỉ dùng kiến thức trong transcript; audience suy ra nhưng nếu thiếu dùng "Học viên đang học chủ đề này"; duration là số nguyên 1-60 ước tính theo độ dài. Chỉ trả JSON theo schema.`;
+  const response = await fetch('https://api.openai.com/v1/responses', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }, body: JSON.stringify({ model: 'gpt-4o-mini', store: false, temperature: 0, input: [{ role: 'system', content: [{ type: 'input_text', text: prompt }] }, { role: 'user', content: [{ type: 'input_text', text }] }], text: { format: { type: 'json_schema', name: 'lesson_metadata', strict: true, schema: metadataSchema } } }) });
+  const payload = await response.json();
+  if (!response.ok) { const error = new Error(payload.error?.message || 'OpenAI không trả về metadata.'); error.status = response.status; throw error; }
+  const outputText = payload.output_text || payload.output?.flatMap(item => item.content || []).find(item => item.type === 'output_text')?.text;
+  return JSON.parse(outputText);
+}
 function serveStatic(req, res) {
   const pathname = new URL(req.url, 'http://localhost').pathname;
   const requested = pathname === '/' ? 'index.html' : pathname.replace(/^\//, '');
@@ -89,6 +101,10 @@ function serveStatic(req, res) {
   res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream' }); fs.createReadStream(file).pipe(res);
 }
 const server = http.createServer((req, res) => {
+  if (req.method === 'POST' && req.url === '/api/lesson-meta') {
+    let raw = ''; req.on('data', chunk => { raw += chunk; if (raw.length > 15000) req.destroy(); });
+    req.on('end', async () => { try { const text = JSON.parse(raw)?.text; if (typeof text !== 'string' || text.length < 20 || text.length > 12000) return send(res, 400, { error: 'Nội dung phải dài 20–12.000 ký tự.' }); send(res, 200, await generateLessonMetadata(text)); } catch (error) { send(res, error.status || 500, { error: error.message || 'Lỗi máy chủ.' }); } }); return;
+  }
   if (req.method === 'POST' && req.url === '/api/storyboard') {
     let raw = ''; req.on('data', chunk => { raw += chunk; if (raw.length > 250000) req.destroy(); });
     req.on('end', async () => { try {
