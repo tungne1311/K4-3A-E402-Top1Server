@@ -20,7 +20,7 @@ function loadLocalEnv() {
 function serveStatic(req, res) {
   const pathname = new URL(req.url, 'http://localhost').pathname;
   const requested = pathname === '/' ? 'index.html' : pathname.replace(/^\//, '');
-  if (!['index.html', 'index.css', 'app.js', 'sample-data.js'].includes(requested)) return send(res, 404, { error: 'Not found.' });
+  if (!['index.html', 'index.css', 'app.js', 'sample-data.js', 'visual-story.js', 'visual-story.css'].includes(requested)) return send(res, 404, { error: 'Not found.' });
   const file = path.resolve(root, requested);
   if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return send(res, 404, { error: 'Không tìm thấy tệp.' });
   const types = { '.html': 'text/html; charset=utf-8', '.js': 'application/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8' };
